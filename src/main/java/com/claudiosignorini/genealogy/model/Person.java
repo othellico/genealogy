@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 public class Person {
 
+    private Long id;
     private String key;
     private String firstName;
     private String lastName;

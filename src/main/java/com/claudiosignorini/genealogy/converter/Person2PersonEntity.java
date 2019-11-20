@@ -10,11 +10,15 @@ public class Person2PersonEntity implements Converter<Person, PersonEntity> {
 
     @Override
     public PersonEntity convert(Person person) {
+        if (person == null) return null;
         return PersonEntity
                 .builder()
+                .id(person.getId())
                 .key(person.getKey())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
+                .father(convert(person.getFather()))
+                .mother(convert(person.getMother()))
                 .build();
     }
 

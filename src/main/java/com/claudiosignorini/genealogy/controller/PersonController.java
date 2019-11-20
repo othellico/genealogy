@@ -21,7 +21,7 @@ public class PersonController {
     public String getPerson(@PathVariable String key, Model model) {
         log.info("person key: {}", key);
         personService
-                .getPerson(key)
+                .findByKey(key)
                 .ifPresent(person -> {
                     log.info("person: {}", person);
                     model.addAttribute("person", person);

@@ -13,6 +13,7 @@ public class PersonEntity2Person implements Converter<PersonEntity, Person> {
         if (personEntity == null) return null;
         return Person
                 .builder()
+                .id(personEntity.getId())
                 .key(personEntity.getKey())
                 .firstName(personEntity.getFirstName())
                 .lastName(personEntity.getLastName())

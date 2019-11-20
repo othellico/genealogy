@@ -23,14 +23,27 @@ public class PersonServiceImpl implements PersonService {
     public Person save(Person person) {
         PersonEntity inputEntity = person2PersonEntity.convert(person);
         PersonEntity savedEntity = personRepository.save(inputEntity);
+        log.info("Saved person: {}", person);
         return personEntity2Person.convert(savedEntity);
     }
 
     @Override
-    public Optional<Person> getPerson(String key) {
+    public Optional<Person> findByKey(String key) {
         return personRepository
                 .findByKey(key)
                 .map(personEntity2Person::convert);
+    }
+
+    @Override
+    public Person getOrCreatePerson(Person person) {
+        if (person.getKey() != null) {
+            Optional<Person> opt = findByKey(person.getKey());
+            if (opt.isPresent()) {
+                Coherence.check(person, opt.get(), Person.class);
+                return opt.get();
+            }
+        }
+        return save(person);
     }
 
 }

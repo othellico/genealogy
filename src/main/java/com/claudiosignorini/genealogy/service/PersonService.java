@@ -8,5 +8,7 @@ public interface PersonService {
 
     Person save(Person person);
 
-    Optional<Person> getPerson(String key);
+    Optional<Person> findByKey(String key);
+
+    Person getOrCreatePerson(Person person);
 }
