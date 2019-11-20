@@ -1,7 +1,6 @@
 package com.claudiosignorini.genealogy.bootstrap;
 
 import com.claudiosignorini.genealogy.model.Person;
-import com.claudiosignorini.genealogy.service.PersonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +10,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,23 +34,21 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.info("Root folder: {}", root);
 
-        File[] folders =
-                new File(root)
-                        .listFiles(File::isDirectory);
-
-        if (folders == null || folders.length == 0) {
-            throw new BootstrapException("Empty root folder.");
-        }
-
-        List<Person> people = Arrays
-                .stream(folders)
-                .map(file -> new File(file, "person.json"))
-                .filter(File::exists)
+        List<Person> people = list(new File(root), File::isDirectory)
+                .flatMap(folder -> list(folder, f -> f.getName().endsWith(".json")))
                 .map(this::readPerson)
                 .collect(Collectors.toList());
 
         people.forEach(personImporter::importPerson);
         people.forEach(parentsImporter::importParents);
+    }
+
+    private static Stream<File> list(File parent, FileFilter filter) {
+        File[] files = parent.listFiles(filter);
+        if (files == null) {
+            files = new File[0];
+        }
+        return Arrays.stream(files);
     }
 
     private Person readPerson(File personFile) {

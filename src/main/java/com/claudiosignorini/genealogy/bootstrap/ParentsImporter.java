@@ -16,10 +16,8 @@ class ParentsImporter {
     private final PersonService personService;
 
     void importParents(Person person) {
-        log.info("Qui arrivo?");
         if (person.getFather() != null || person.getMother() != null) {
             Optional<Person> opt = personService.findByKey(person.getKey());
-            log.info("opt: {}", opt);
             if (opt.isPresent()) {
                 Person dbPerson = opt.get();
 
@@ -31,7 +29,6 @@ class ParentsImporter {
                     Person dbMotherPerson = personService.getOrCreatePerson(person.getMother());
                     dbPerson.setMother(dbMotherPerson);
                 }
-                log.info("Sto per salvare i genitori");
                 personService.save(dbPerson);
             } else {
                 throw new BootstrapException("Person key not found: " + person.getKey());
