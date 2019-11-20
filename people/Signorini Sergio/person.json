@@ -1,0 +1,10 @@
+{
+  "firstName": "Sergio",
+  "lastName": "Signorini",
+  "father": {
+    "key": "Signorini Pietro"
+  },
+  "mother": {
+    "key": "Antolini Teresa"
+  }
+}

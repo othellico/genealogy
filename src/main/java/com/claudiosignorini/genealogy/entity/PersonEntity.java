@@ -21,4 +21,12 @@ public class PersonEntity {
     private String firstName;
     private String lastName;
 
+    @ManyToOne
+    @JoinColumn(name = "father_id")
+    private PersonEntity father;
+
+    @ManyToOne
+    @JoinColumn(name = "mother_id")
+    private PersonEntity mother;
+
 }

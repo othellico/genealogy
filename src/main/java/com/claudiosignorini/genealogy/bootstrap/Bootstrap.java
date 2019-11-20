@@ -41,6 +41,33 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
             Arrays
                     .stream(folders)
                     .forEach(this::importPerson);
+            Arrays
+                    .stream(folders)
+                    .forEach(this::importParents);
+        }
+    }
+
+    private void importParents(File file) {
+        try {
+            log.info("Importing {} parents:", file.getName());
+            File personJsonFile = new File(file, "person.json");
+            if (personJsonFile.exists()) {
+                Person readPerson = objectMapper.readValue(personJsonFile, Person.class);
+                if (readPerson.getFather() != null || readPerson.getMother() != null) {
+                    Person dbPerson = personService.getPerson(file.getName()).get();
+
+                    if (readPerson.getFather() != null) {
+                        Person father = personService.getPerson(readPerson.getFather().getKey());
+                    }
+
+                    log.info("  parents imported.");
+                }
+            } else {
+                log.info("  person.json file not found.");
+            }
+        }
+        catch (IOException e) {
+            log.warn(e.getMessage(), e);
         }
     }
 
@@ -51,6 +78,9 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
             if (personJsonFile.exists()) {
                 Person person = objectMapper.readValue(personJsonFile, Person.class);
                 person.setKey(file.getName());
+                // Annullo padre e madre perchè li imposto nel secondo ciclo
+                person.setFather(null);
+                person.setMother(null);
                 personService.save(person);
                 log.info("  person.json imported.");
             } else {

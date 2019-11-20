@@ -14,5 +14,7 @@ public class Person {
     private String firstName;
     private String lastName;
     private Event birth;
+    private Person father;
+    private Person mother;
 
 }

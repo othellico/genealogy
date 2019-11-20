@@ -16,14 +16,14 @@
         <div class="row">
             <div class="col">
                 <h1 th:object="${person}"><span th:text="*{lastName}">LastName</span> <span th:text="*{firstName}">FirstName</span></h1>
-                <div th:object="${eventList}">Nascita: <span th:text="*{birth.date.value}">dateOfBirth</span> <span th:inline="text">a [[*{birth.place.value}]]</span></div>
+                <div th:unless="${eventList == null}" th:object="${eventList}">Nascita: <span th:text="*{birth.date.value}">dateOfBirth</span> <span th:inline="text">a [[*{birth.place.value}]]</span></div>
             </div>
         </div>
     </div>
 </header>
 <div class="container" role="main">
     <div class="row">
-        <div class="col-sm-8" th:object="${eventList}">
+        <div class="col-sm-8" th:unless="${eventList == null}" th:object="${eventList}">
             <h2>Avvenimenti</h2>
             <table class="table table-striped">
                 <tbody>
@@ -38,14 +38,14 @@
         <div class="col-sm-4">
             <h2>Famiglia</h2>
             <h4>Genitori</h4>
-            <div class="card mb-3">
-                <div class="card-body py-1">
-                    Signorini Sergio
+            <div th:unless="${person.father == null}" class="card mb-3">
+                <div class="card-body py-1" th:text="${person.father.lastName}">
+                    Father
                 </div>
             </div>
-            <div class="card mb-3">
-                <div class="card-body py-1">
-                    Zanchetta Patrizia
+            <div th:unless="${person.mother == null}" class="card mb-3">
+                <div class="card-body py-1" th:text="${person.mother.lastName}">
+                    Mother
                 </div>
             </div>
             <h4>Fratelli/sorelle</h4>
