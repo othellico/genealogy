@@ -2,6 +2,7 @@ package com.claudiosignorini.genealogy.bootstrap;
 
 import com.claudiosignorini.genealogy.model.Person;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +23,20 @@ import java.util.stream.Stream;
 @Component
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = buildObjectMapper();
+
+    private static ObjectMapper buildObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
+    }
 
     @Value("${genealogy.root}")
     private String root;
 
     private final PersonImporter personImporter;
     private final ParentsImporter parentsImporter;
+    private final EventsImporter eventsImporter;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -41,6 +49,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
         people.forEach(personImporter::importPerson);
         people.forEach(parentsImporter::importParents);
+        people.forEach(eventsImporter::importEvents);
     }
 
     private static Stream<File> list(File parent, FileFilter filter) {

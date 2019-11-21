@@ -7,6 +7,10 @@ import lombok.Setter;
 @Setter
 public class Event {
 
+    private Long id;
+
+    private Person person;
+
     private Date date;
     private Place place;
 
@@ -20,7 +24,7 @@ public class Event {
             case WEDDING:
                 return "Matrimonio";
             case DEATH:
-                return "Morte";
+                return "Decesso";
             default:
                 return "";
         }

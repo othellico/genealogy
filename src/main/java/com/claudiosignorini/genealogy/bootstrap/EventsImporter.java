@@ -1,5 +1,6 @@
 package com.claudiosignorini.genealogy.bootstrap;
 
+import com.claudiosignorini.genealogy.model.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -8,4 +9,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class EventsImporter {
+
+    public void importEvents(Person person) {
+
+    }
+
 }

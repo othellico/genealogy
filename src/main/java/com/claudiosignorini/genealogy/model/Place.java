@@ -7,18 +7,23 @@ import lombok.Setter;
 @Setter
 public class Place {
 
+    private Long id;
+
     private String building;
+    private String village;
     private String municipality;
+    private String province;
     private String region;
     private String state;
 
     public String getValue() {
         StringBuilder builder = new StringBuilder();
-        boolean first = true;
-        first = append(builder, building, first);
+        boolean first = append(builder, building, true);
+        first = append(builder, village, first);
         first = append(builder, municipality, first);
+        first = append(builder, province, first);
         first = append(builder, region, first);
-        first = append(builder, state, first);
+        append(builder, state, first);
         return builder.toString();
     }
 
